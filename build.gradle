@@ -16,7 +16,13 @@ dependencies {
     implementation 'javax.servlet:javax.servlet.api:4.0.1'
     implementation 'javax.servlet:jstl:1.2'
 
-    implementation 'ch.gos.logback:logback-classic:1.2.3'
+    // Lombok 추가
+    compileOnly 'org.projectlombok:lombok:1.18.28'
+    annotationProcessor 'org.projectlombok:lombok:1.18.28'
+
+    // 테스트 의존성 추가 (테스트 코드에서도 Lombok을 사용하고자 할 경우)
+    testCompileOnly 'org.projectlombok:lombok:1.18.28'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
 
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
