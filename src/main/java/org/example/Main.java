@@ -1,11 +1,23 @@
 package org.example;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.startup.Tomcat;
 
+import java.io.File;
+
+@Slf4j
 public class Main {
 
-    private static final Logger log = LoggerFactory.getLogger(Main.class);
+    public static void main(String[] args) throws LifecycleException {
+        String webappDirLocation = "webapps/";
+        Tomcat tomcat = new Tomcat();
+        tomcat.setPort(8080);
 
-    public static void main(String[] args) {
-        System.out.println("Hello world!");
+        tomcat.addWebapp("/",new File(webappDirLocation).getAbsolutePath());
+        log.info("con");
+
+        tomcat.start();
+        tomcat.getServer().await();
     }
 }
