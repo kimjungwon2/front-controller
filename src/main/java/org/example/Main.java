@@ -1,5 +1,6 @@
 package org.example;
 
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
@@ -15,7 +16,6 @@ public class Main {
         tomcat.setPort(8080);
 
         tomcat.addWebapp("/",new File(webappDirLocation).getAbsolutePath());
-        log.info("con");
 
         tomcat.start();
         tomcat.getServer().await();

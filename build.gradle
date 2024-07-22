@@ -7,22 +7,23 @@ version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
     implementation 'org.apache.tomcat.embed:tomcat-embed-core:9.0.55'
     implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:9.0.55'
 
-    implementation 'javax.servlet:javax.servlet.api:4.0.1'
+    implementation 'javax.servlet:javax.servlet-api:4.0.1'
     implementation 'javax.servlet:jstl:1.2'
 
-    // Lombok 추가
-    compileOnly 'org.projectlombok:lombok:1.18.28'
-    annotationProcessor 'org.projectlombok:lombok:1.18.28'
+    implementation 'org.slf4j:slf4j-api:1.7.32' // SLF4J API 추가
+    implementation 'ch.qos.logback:logback-classic:1.2.10' // Logback 구현체 추가
 
-    // 테스트 의존성 추가 (테스트 코드에서도 Lombok을 사용하고자 할 경우)
-    testCompileOnly 'org.projectlombok:lombok:1.18.28'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
+    compileOnly 'org.projectlombok:lombok:1.18.24' // Lombok 버전은 최신 버전으로 업데이트하세요
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    testCompileOnly 'org.projectlombok:lombok:1.18.24'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
 
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
