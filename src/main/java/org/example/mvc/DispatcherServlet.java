@@ -1,6 +1,7 @@
 package org.example.mvc;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.mvc.controller.Controller;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,8 +13,31 @@ import java.io.IOException;
 @Slf4j
 @WebServlet("/")
 public class DispatcherServlet extends HttpServlet {
+
+    private RequestMappingHandlerMapping rmhm;
+
+
+    @Override
+    public void init() throws ServletException {
+        rmhm.init();
+    }
+
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        log.info("DispatcherServlet#service");
+        log.info("DispatcherServlet service Started");
+
+        Controller handler = rmhm.findHandler(request.getRequestURI());
+        try {
+            String viewName = handler.handleRequest(request, response);
+
+
+        } catch (Exception e) {
+            log.error("exception occurred: [{}]", e.getMessage(),e);
+            throw new ServletException(e);
+        }
     }
+
+
+
+
 }
