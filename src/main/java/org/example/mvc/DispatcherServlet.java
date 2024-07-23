@@ -3,6 +3,7 @@ package org.example.mvc;
 import lombok.extern.slf4j.Slf4j;
 import org.example.mvc.controller.Controller;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,14 +31,12 @@ public class DispatcherServlet extends HttpServlet {
         try {
             String viewName = handler.handleRequest(request, response);
 
-
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher(viewName);
+            requestDispatcher.forward(request, response);
         } catch (Exception e) {
             log.error("exception occurred: [{}]", e.getMessage(),e);
             throw new ServletException(e);
         }
     }
-
-
-
 
 }
