@@ -2,6 +2,7 @@ package org.example.mvc;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.mvc.controller.Controller;
+import org.example.mvc.controller.RequestMethod;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -28,7 +29,7 @@ public class DispatcherServlet extends HttpServlet {
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.info("DispatcherServlet service Started");
 
-        Controller handler = rmhm.findHandler(request.getRequestURI());
+        Controller handler = rmhm.findHandler(new HandlerKey(RequestMethod.valueOf(request.getMethod()), request.getRequestURI()));
         try {
             String viewName = handler.handleRequest(request, response);
 

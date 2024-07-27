@@ -17,7 +17,7 @@ public class RequestMappingHandlerMapping {
         mappings.put(new HandlerKey(RequestMethod.GET, "/users"), new HomeController());
     }
 
-    public Controller findHandler(String urlPath){
-        return mappings.get(urlPath);
+    public Controller findHandler(HandlerKey handlerKey){
+        return mappings.get(handlerKey);
     }
 }
