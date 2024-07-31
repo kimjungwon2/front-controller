@@ -26,10 +26,14 @@ public class DispatcherServlet extends HttpServlet {
 
     private List<ViewResolver> viewResolvers;
 
+    private List<HandlerAdapter> handlerAdapters;
+
     @Override
     public void init() throws ServletException {
         rmhm = new RequestMappingHandlerMapping();
         rmhm.init();
+
+        handlerAdapters = List.of(new SimpleControllerHandlerAdapter());
 
         viewResolvers = Collections.singletonList(new JspViewResolver());
     }
