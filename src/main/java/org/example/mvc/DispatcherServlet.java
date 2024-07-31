@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.mvc.controller.Controller;
 import org.example.mvc.controller.RequestMethod;
 import org.example.mvc.view.JspViewResolver;
+import org.example.mvc.view.ModelAndView;
 import org.example.mvc.view.View;
 import org.example.mvc.view.ViewResolver;
 
@@ -49,9 +50,17 @@ public class DispatcherServlet extends HttpServlet {
             RequestDispatcher requestDispatcher = request.getRequestDispatcher(viewName);
             requestDispatcher.forward(request, response);
 
+            HandlerAdapter handlerAdapter = handlerAdapters.stream()
+                    .filter(ha -> ha.supports(handler))
+                    .findFirst()
+                    .orElseThrow(() -> new ServletException("No adapter for handler [" + handler + "]"));
+
+            ModelAndView modelAndView = handlerAdapter.handle(request, response, handler);
+
+
             for (ViewResolver viewResolver : viewResolvers) {
                 View view = viewResolver.resolveView(viewName);
-                view.render(new HashMap<>(), request, response);
+                view.render(modelAndView.getModel(), request, response);
             }
 
         } catch (Exception e) {
