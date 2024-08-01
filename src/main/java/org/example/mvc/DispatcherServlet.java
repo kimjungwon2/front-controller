@@ -59,7 +59,7 @@ public class DispatcherServlet extends HttpServlet {
 
 
             for (ViewResolver viewResolver : viewResolvers) {
-                View view = viewResolver.resolveView(viewName);
+                View view = viewResolver.resolveView(modelAndView.getViewName());
                 view.render(modelAndView.getModel(), request, response);
             }
 
