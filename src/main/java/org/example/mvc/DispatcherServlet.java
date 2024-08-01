@@ -23,7 +23,7 @@ import java.util.List;
 @WebServlet("/")
 public class DispatcherServlet extends HttpServlet {
 
-    private RequestMappingHandlerMapping rmhm;
+    private HandlerMapping hm;
 
     private List<ViewResolver> viewResolvers;
 
@@ -31,8 +31,10 @@ public class DispatcherServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        rmhm = new RequestMappingHandlerMapping();
+        RequestMappingHandlerMapping rmhm = new RequestMappingHandlerMapping();
         rmhm.init();
+
+        hm = rmhm;
 
         handlerAdapters = List.of(new SimpleControllerHandlerAdapter());
 
@@ -43,13 +45,8 @@ public class DispatcherServlet extends HttpServlet {
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.info("DispatcherServlet service Started");
 
-        Controller handler = rmhm.findHandler(new HandlerKey(RequestMethod.valueOf(request.getMethod()), request.getRequestURI()));
         try {
-            String viewName = handler.handleRequest(request, response);
-
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher(viewName);
-            requestDispatcher.forward(request, response);
-
+            Object handler = hm.findHandler(new HandlerKey(RequestMethod.valueOf(request.getMethod()), request.getRequestURI()));
             HandlerAdapter handlerAdapter = handlerAdapters.stream()
                     .filter(ha -> ha.supports(handler))
                     .findFirst()
