@@ -1,14 +1,12 @@
 package org.example.mvc;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.mvc.controller.Controller;
 import org.example.mvc.controller.RequestMethod;
 import org.example.mvc.view.JspViewResolver;
 import org.example.mvc.view.ModelAndView;
 import org.example.mvc.view.View;
 import org.example.mvc.view.ViewResolver;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,14 +14,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
 @WebServlet("/")
 public class DispatcherServlet extends HttpServlet {
 
-    private HandlerMapping hm;
+    private List<HandlerMapping> handlerMappings;
 
     private List<ViewResolver> viewResolvers;
 
@@ -34,8 +31,9 @@ public class DispatcherServlet extends HttpServlet {
         RequestMappingHandlerMapping rmhm = new RequestMappingHandlerMapping();
         rmhm.init();
 
-        hm = rmhm;
+        AnnotationHanlderMapping ahm = new AnnotationHanlderMapping();
 
+        handlerMappings = List.of(rmhm, ahm);
         handlerAdapters = List.of(new SimpleControllerHandlerAdapter());
 
         viewResolvers = Collections.singletonList(new JspViewResolver());
@@ -46,7 +44,7 @@ public class DispatcherServlet extends HttpServlet {
         log.info("DispatcherServlet service Started");
 
         try {
-            Object handler = hm.findHandler(new HandlerKey(RequestMethod.valueOf(request.getMethod()), request.getRequestURI()));
+            Object handler = handlerMappings.findHandler(new HandlerKey(RequestMethod.valueOf(request.getMethod()), request.getRequestURI()));
             HandlerAdapter handlerAdapter = handlerAdapters.stream()
                     .filter(ha -> ha.supports(handler))
                     .findFirst()
