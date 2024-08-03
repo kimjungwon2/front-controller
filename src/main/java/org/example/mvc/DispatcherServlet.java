@@ -43,8 +43,15 @@ public class DispatcherServlet extends HttpServlet {
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.info("DispatcherServlet service Started");
 
+        String requestURI = request.getRequestURI();
+        RequestMethod requestMethod = RequestMethod.valueOf(request.getMethod());
         try {
-            Object handler = handlerMappings.findHandler(new HandlerKey(RequestMethod.valueOf(request.getMethod()), request.getRequestURI()));
+            Object handler = handlerMappings.stream()
+                            .filter(hm->hm.findHandler(new HandlerKey(requestMethod,requestURI)) != null)
+                            .map(hm->hm.findHandler(new HandlerKey(requestMethod, requestURI)))
+                            .findFirst()
+                            .orElseThrow(()->new ServletException("No Handler for["+requestMethod+", "+requestURI+"]"));
+
             HandlerAdapter handlerAdapter = handlerAdapters.stream()
                     .filter(ha -> ha.supports(handler))
                     .findFirst()
