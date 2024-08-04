@@ -31,7 +31,9 @@ public class DispatcherServlet extends HttpServlet {
         RequestMappingHandlerMapping rmhm = new RequestMappingHandlerMapping();
         rmhm.init();
 
-        AnnotationHanlderMapping ahm = new AnnotationHanlderMapping();
+        AnnotationHandlerMapping ahm = new AnnotationHandlerMapping("org.example");
+        ahm.initialize();
+
 
         handlerMappings = List.of(rmhm, ahm);
         handlerAdapters = List.of(new SimpleControllerHandlerAdapter());
