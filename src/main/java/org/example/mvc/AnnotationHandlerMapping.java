@@ -1,11 +1,11 @@
 package org.example.mvc;
 
 
+import org.example.mvc.annotation.Controller;
 import org.example.mvc.annotation.RequestMapping;
-import org.example.mvc.controller.Controller;
+import org.example.mvc.controller.RequestMethod;
 import org.reflections.Reflections;
 
-import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,21 +24,21 @@ public class AnnotationHandlerMapping implements HandlerMapping{
         Reflections reflections = new Reflections(basePackage);
 
         //HomeController
-        Set<Class<?>> clazzWithControllerAnnotation = reflections.getTypesAnnotatedWith((Class<? extends Annotation>) Controller.class);
+        Set<Class<?>> clazzWithControllerAnnotation = reflections.getTypesAnnotatedWith(Controller.class);
 
         clazzWithControllerAnnotation.forEach(clazz->
                 Arrays.stream(clazz.getDeclaredMethods()).forEach(declaredMethod ->{
-                    RequestMapping requestMapping = declaredMethod.getDeclaredAnnotations(RequestMapping.class);
+                    RequestMapping requestMapping = declaredMethod.getDeclaredAnnotation(RequestMapping.class);
 
                     Arrays.stream(getRequestMethods(requestMapping))
                             .forEach(requestMethod -> handlers.put(
-                                    new HandlerKey(requestMapping.value(), requestMethod),new AnnotationHandler()
+                                    new HandlerKey(requestMethod, requestMapping.value()),new AnnotationHandler(clazz,declaredMethod)
                             ));
                 })
         );
     }
 
-    private int[] getRequestMethods(RequestMapping requestMapping) {
+    private RequestMethod[] getRequestMethods(RequestMapping requestMapping) {
         return requestMapping.method();
     }
 
